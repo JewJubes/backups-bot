@@ -23,17 +23,17 @@ exports.run = async (client, message, args) => {
             collector.stop();
             if (confirm) {
 
-                backup.load(backupID, message.guild).then(() => {
+                backup.load(backupID, message.guild,{maxMessagesPerChannel: 9999999,}).then(() => {
 
                     return message.author.send('Backup loaded successfully!');
-            
+
                 }).catch((err) => {
-            
+
                     if (err === 'No backup found')
                         return message.channel.send(':x: No backup found for ID '+backupID+'!');
                     else
                         return message.author.send(':x: An error occurred: '+(typeof err === 'string') ? err : JSON.stringify(err));
-            
+
                 });
 
             } else {
@@ -51,3 +51,4 @@ exports.run = async (client, message, args) => {
     });
 
 };
+
