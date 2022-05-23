@@ -1,6 +1,8 @@
 const fs = require('fs');
-
+const cron = require('node-cron');
+const backup = require("discord-backup");
 const Discord = require('discord.js');
+backup.setStorageFolder(__dirname+"/backups/");
 const client = new Discord.Client({
     intents: [
         Discord.Intents.FLAGS.GUILDS,
@@ -36,5 +38,27 @@ fs.readdir("./commands/", (_err, files) => {
     });
 });
 
+// Auto backup
+
+client.on("ready", () => {
+    console.log("Let's do this!");
+    
+        const channel = client.channels.cache.get('x');
+        const CronJob = require('cron').CronJob;
+        
+let autobackup = new CronJob ("0 1 * * *", function() {
+console.log("Backing up now!");
+channel.send('Daily Backup starting now.');
+   backup.create(channel.guild, {maxMessagesPerChannel: 9999999, jsonSave: true, jsonBeautify: true, saveImages: "base64"})
+        }, null, true, 'America/Toronto);
+    autobackup.start();
+    
+});
+
+
+
 // Login
 client.login(config.token);
+
+
+
